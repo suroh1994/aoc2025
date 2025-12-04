@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	batteryBankRunes := lib.ReadInputAsRuneMap()
+	batteryBankRunes := lib.ReadInputAsRuneMap(3)
 	batteryBanks := runesToInt(batteryBankRunes)
 
 	totalPowerOne := 0

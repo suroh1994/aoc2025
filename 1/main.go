@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	instructions := lib.ReadInputAsLines()
+	instructions := lib.ReadInputAsLines(1)
 
 	timesLandedOnZero := 0
 

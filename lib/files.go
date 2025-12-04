@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-func ReadInput() string {
-	content, err := os.ReadFile("input")
+func ReadInput(day int) string {
+	content, err := os.ReadFile(fmt.Sprintf("%d/input", day))
 	if err != nil {
 		panic(fmt.Sprintf("'input' file missing! %v", err))
 	}
@@ -16,17 +16,17 @@ func ReadInput() string {
 	return string(content)
 }
 
-func ReadInputAsLines() []string {
-	input := ReadInput()
+func ReadInputAsLines(day int) []string {
+	input := ReadInput(day)
 	separator := "\n"
 	if strings.Contains(input, "\r") {
 		separator = "\r\n"
 	}
-	return strings.Split(ReadInput(), separator)
+	return strings.Split(input, separator)
 }
 
-func ReadInputAsRuneMap() [][]rune {
-	lines := ReadInputAsLines()
+func ReadInputAsRuneMap(day int) [][]rune {
+	lines := ReadInputAsLines(day)
 	return LinesToRuneMap(lines)
 }
 
@@ -38,8 +38,8 @@ func LinesToRuneMap(lines []string) [][]rune {
 	return runeMap
 }
 
-func ReadMultipleIntValuesPerLine(delimiter string) [][]int {
-	lines := ReadInputAsLines()
+func ReadMultipleIntValuesPerLine(day int, delimiter string) [][]int {
+	lines := ReadInputAsLines(day)
 	values := make([][]int, len(lines))
 	for idx, line := range lines {
 		valuesInLine := strings.Split(line, delimiter)
