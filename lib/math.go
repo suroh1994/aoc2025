@@ -18,3 +18,7 @@ func Abs(num int) int {
 	}
 	return num
 }
+
+func Pow(base, exp int) int {
+	return int(math.Pow(float64(base), float64(exp)))
+}
