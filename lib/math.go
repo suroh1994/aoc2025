@@ -22,3 +22,7 @@ func Abs(num int) int {
 func Pow(base, exp int) int {
 	return int(math.Pow(float64(base), float64(exp)))
 }
+
+func Log10Int(x int) int {
+	return int(math.Ceil(math.Log10(float64(x))))
+}
