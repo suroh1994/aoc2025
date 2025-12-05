@@ -3,7 +3,7 @@ package main
 import (
 	"aoc2025/lib"
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 )
 
@@ -24,7 +24,7 @@ func main() {
 		ranges = append(ranges, Range{Lower: lower, Upper: upper})
 	}
 	i++
-	sort.Slice(ranges, func(i, j int) bool { return ranges[i].Lower < ranges[j].Lower })
+	slices.SortFunc(ranges, SortRanges)
 
 	freshIngredientCount := 0
 	for ; i < len(lines); i++ {
@@ -52,4 +52,25 @@ func main() {
 	}
 
 	fmt.Println(freshIngredientCount)
+
+	//~~~~~~ Part 2 ~~~~~~
+	for i := 0; i < len(ranges)-1; i++ {
+		if ranges[i].Upper >= ranges[i+1].Lower {
+			ranges[i].Lower = min(ranges[i].Lower, ranges[i+1].Lower)
+			ranges[i].Upper = max(ranges[i].Upper, ranges[i+1].Upper)
+			ranges = append(ranges[:i+1], ranges[i+2:]...)
+			i--
+		}
+	}
+
+	validIdCount := 0
+	for _, boundary := range ranges {
+		validIdCount += boundary.Upper - boundary.Lower + 1
+	}
+
+	fmt.Println(validIdCount)
+}
+
+func SortRanges(i, j Range) int {
+	return i.Lower - j.Lower
 }
