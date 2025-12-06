@@ -36,14 +36,21 @@ func main() {
 	workerTask := func() {
 		for {
 			if len(buffer) == 0 {
-				break
+				return
 			}
 
 			select {
 			case point := <-buffer:
 				m.Lock()
-				// drop queue entry if already processed or not a paper roll
-				if wipMap[point] || input[point.X][point.Y] == '.' {
+				// drop queue entry if not a paper roll
+				if input[point.X][point.Y] == '.' {
+					m.Unlock()
+					continue
+				}
+
+				// requeue if currently being processed
+				if wipMap[point] {
+					buffer <- point
 					m.Unlock()
 					continue
 				}
@@ -70,7 +77,6 @@ func main() {
 							}
 						}
 					}
-					fmt.Printf("[%d | %d] removed from map, %d total removed, %d left in queue\n", point.X, point.Y, accessibleRollCount, len(buffer))
 				}
 
 				// work is done, release for the next check
@@ -89,7 +95,6 @@ func main() {
 	}
 
 	wg.Wait()
-	fmt.Println(len(buffer))
 	fmt.Println(accessibleRollCount)
 }
 
@@ -108,7 +113,3 @@ func countNeighbouringRolls(input [][]rune, x, y int) int {
 	}
 	return count
 }
-
-// Idea: add all @ to a list, have multiple workers take one entry from the list, check whether it can be removed and if it can, add all neighboring rolls
-// We need a mutex per position of the map to avoid congestion. (A map of position to mutex maybe?)
-func processPosition(input [][]rune, x, y int) {}
