@@ -40,4 +40,39 @@ func main() {
 	}
 	wg.Wait()
 	fmt.Println(invalidTotal)
+
+	//~~~~~Part 2~~~~~//
+	invalidTotal = 0
+	for _, idRange := range ranges {
+		wg.Go(func() {
+			boundaries := strings.Split(idRange, "-")
+			lower := lib.MustParseToInt(boundaries[0])
+			upper := lib.MustParseToInt(boundaries[1])
+
+			for id := lower; id <= upper; id++ {
+				idString := strconv.Itoa(id)
+				if hasRepeatingPattern(idString) {
+					m.Lock()
+					invalidTotal += id
+					m.Unlock()
+				}
+			}
+		})
+	}
+	wg.Wait()
+	fmt.Println(invalidTotal)
+}
+
+func hasRepeatingPattern(testString string) bool {
+	digitCount := len(testString)
+	for repetitions := 2; repetitions <= digitCount; repetitions++ {
+		if digitCount%repetitions != 0 {
+			continue
+		}
+		segmentLength := digitCount / repetitions
+		if strings.Repeat(testString[:segmentLength], repetitions) == testString {
+			return true
+		}
+	}
+	return false
 }
