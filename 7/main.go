@@ -44,4 +44,33 @@ func main() {
 	}
 
 	fmt.Println(numOfSplits)
+
+	//~~~~~ Part 2 ~~~~~//
+	timelineCount := followAllPaths(beamMap, start)
+	fmt.Println(timelineCount)
+}
+
+var KnownTimelines = map[lib.Point2D]int{}
+
+func followAllPaths(beamMap [][]rune, startPosition lib.Point2D) int {
+	if timelineCount, isKnown := KnownTimelines[startPosition]; isKnown {
+		return timelineCount
+	}
+
+	currentPosition := startPosition.Add(lib.DOWN)
+	for lib.IsPosInBounds(beamMap, currentPosition) &&
+		(beamMap[currentPosition.X][currentPosition.Y] == '.' ||
+			beamMap[currentPosition.X][currentPosition.Y] == '|') {
+		currentPosition = currentPosition.Add(lib.DOWN)
+	}
+
+	if !lib.IsPosInBounds(beamMap, currentPosition) {
+		return 1
+	}
+
+	timelineCount := followAllPaths(beamMap, currentPosition.Add(lib.LEFT)) +
+		followAllPaths(beamMap, currentPosition.Add(lib.RIGHT))
+
+	KnownTimelines[startPosition] = timelineCount
+	return timelineCount
 }
