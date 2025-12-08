@@ -73,7 +73,10 @@ func main() {
 
 	for i, distance := range distances {
 		if i == 1000 {
-			break
+			slices.SortFunc(circuits, func(a, b []int) int {
+				return len(b) - len(a)
+			})
+			fmt.Println(len(circuits[0]) * len(circuits[1]) * len(circuits[2]))
 		}
 
 		var circuitsToMerge []int
@@ -89,11 +92,10 @@ func main() {
 		}
 		circuits[circuitsToMerge[0]] = append(circuits[circuitsToMerge[0]], circuits[circuitsToMerge[1]]...)
 		circuits = append(circuits[:circuitsToMerge[1]], circuits[circuitsToMerge[1]+1:]...)
+
+		if len(circuits) == 1 {
+			fmt.Println(parsedCoords[distance.idxA].X * parsedCoords[distance.idxB].X)
+			break
+		}
 	}
-
-	slices.SortFunc(circuits, func(a, b []int) int {
-		return len(b) - len(a)
-	})
-
-	fmt.Println(len(circuits[0]) * len(circuits[1]) * len(circuits[2]))
 }
