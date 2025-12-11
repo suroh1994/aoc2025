@@ -25,4 +25,14 @@ func main() {
 	}
 
 	fmt.Println(maxArea)
+
+	//~~~~~Part 2~~~~~//
+	floorMap := make([][]rune, 10_000)
+	for i := range floorMap {
+		floorMap[i] = make([]rune, 10_000)
+		for j := range floorMap[i] {
+			floorMap[i][j] = '.'
+		}
+	}
+
 }
